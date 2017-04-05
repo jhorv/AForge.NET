@@ -192,8 +192,8 @@ namespace AForge
                 threads[i].Join( );
 
                 // close events
-                jobAvailable[i].Close( );
-                threadIdle[i].Close( );
+                jobAvailable[i].Dispose( );
+                threadIdle[i].Dispose( );
             }
 
             // clean all array references

@@ -12,8 +12,9 @@ namespace AForge.Imaging.Filters
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Collections;
+    using System.Collections.Generic;
 
-	/// <summary>
+    /// <summary>
     /// Filters' collection to apply to an image in sequence.
     /// </summary>
     /// 
@@ -37,8 +38,10 @@ namespace AForge.Imaging.Filters
     /// </code>
     /// </remarks>
     /// 
-	public class FiltersSequence : CollectionBase, IFilter
+    public class FiltersSequence : /*CollectionBase,*/ IFilter, IList
 	{
+        readonly List<object> _list = new List<object>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FiltersSequence"/> class.
         /// </summary>
@@ -53,7 +56,7 @@ namespace AForge.Imaging.Filters
         /// 
         public FiltersSequence( params IFilter[] filters )
 		{
-			InnerList.AddRange( filters );
+			_list.AddRange( filters );
 		}
 
         /// <summary>
@@ -66,8 +69,24 @@ namespace AForge.Imaging.Filters
         /// 
 		public IFilter this[int index]
 		{
-			get { return ((IFilter) InnerList[index]); }
+			get { return ((IFilter) _list[index]); }
 		}
+
+        object IList.this[int index]
+        {
+            get => _list[index];
+            set => _list[index] = value;
+        }
+
+        public bool IsFixedSize => ((IList)_list).IsFixedSize;
+
+        public bool IsReadOnly => ((IList)_list).IsReadOnly;
+
+        public int Count => _list.Count;
+
+        public bool IsSynchronized => ((IList)_list).IsSynchronized;
+
+        public object SyncRoot => ((IList)_list).SyncRoot;
 
         /// <summary>
         /// Add new filter to the sequence.
@@ -75,10 +94,15 @@ namespace AForge.Imaging.Filters
         /// 
         /// <param name="filter">Filter to add to the sequence.</param>
         /// 
-		public void Add( IFilter filter )
+        public void Add( IFilter filter )
 		{
-			InnerList.Add( filter );
+			_list.Add( filter );
 		}
+
+        public int Add(object value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Apply filter to an image.
@@ -163,7 +187,7 @@ namespace AForge.Imaging.Filters
         ///
         public UnmanagedImage Apply( UnmanagedImage image )
         {
-            int n = InnerList.Count;
+            int n = _list.Count;
 
             // check for empty sequence
             if ( n == 0 )
@@ -173,13 +197,13 @@ namespace AForge.Imaging.Filters
             UnmanagedImage tmpImg = null;
 
             // apply the first filter
-            dstImg = ( (IFilter) InnerList[0] ).Apply( image );
+            dstImg = ( (IFilter) _list[0] ).Apply( image );
 
             // apply other filters
             for ( int i = 1; i < n; i++ )
             {
                 tmpImg = dstImg;
-                dstImg = ( (IFilter) InnerList[i] ).Apply( tmpImg );
+                dstImg = ( (IFilter)_list[i] ).Apply( tmpImg );
                 tmpImg.Dispose( );
             }
 
@@ -204,7 +228,7 @@ namespace AForge.Imaging.Filters
         ///
         public void Apply( UnmanagedImage sourceImage, UnmanagedImage destinationImage )
         {
-            int n = InnerList.Count;
+            int n = _list.Count;
 
             // check for empty sequence
             if ( n == 0 )
@@ -212,7 +236,7 @@ namespace AForge.Imaging.Filters
 
             if ( n == 1 )
             {
-                ( (IFilter) InnerList[0] ).Apply( sourceImage, destinationImage );
+                ( (IFilter)_list[0] ).Apply( sourceImage, destinationImage );
             }
             else
             {
@@ -220,19 +244,59 @@ namespace AForge.Imaging.Filters
                 UnmanagedImage tmpImg2 = null;
 
                 // apply the first filter
-                tmpImg1 = ( (IFilter) InnerList[0] ).Apply( sourceImage );
+                tmpImg1 = ( (IFilter)_list[0] ).Apply( sourceImage );
 
                 // apply other filters, except the last one
                 n--;
                 for ( int i = 1; i < n; i++ )
                 {
                     tmpImg2 = tmpImg1;
-                    tmpImg1 = ( (IFilter) InnerList[i] ).Apply( tmpImg2 );
+                    tmpImg1 = ( (IFilter)_list[i] ).Apply( tmpImg2 );
                     tmpImg2.Dispose( );
                 }
 
-                ( (IFilter) InnerList[n] ).Apply( tmpImg1, destinationImage );
+                ( (IFilter)_list[n] ).Apply( tmpImg1, destinationImage );
             }
         }
-	}
+
+        public void Clear()
+        {
+            _list.Clear();
+        }
+
+        public bool Contains(object value)
+        {
+            return _list.Contains(value);
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            _list.CopyTo((object[])array, index);
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        public int IndexOf(object value)
+        {
+            return _list.IndexOf(value);
+        }
+
+        public void Insert(int index, object value)
+        {
+            _list.Insert(index, value);
+        }
+
+        public void Remove(object value)
+        {
+            _list.Remove(value);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _list.RemoveAt(index);
+        }
+    }
 }

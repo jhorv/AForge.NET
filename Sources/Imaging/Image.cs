@@ -13,6 +13,7 @@ namespace AForge.Imaging
     using System.Drawing;
     using System.Drawing.Imaging;
     using AForge;
+    using SkiaSharp;
 
     /// <summary>
     /// Core image relatad methods.
@@ -141,9 +142,13 @@ namespace AForge.Imaging
             Bitmap bitmap = new Bitmap( width, height, format );
 
             // draw source image on the new one using Graphics
-            Graphics g = Graphics.FromImage( bitmap );
-            g.DrawImage( source, 0, 0, width, height );
-            g.Dispose( );
+            using (var canvas = new SKCanvas(bitmap))
+            {
+                canvas.DrawBitmap(source, new SKRect(0, 0, width, height));
+            }
+            //Graphics g = Graphics.FromImage( bitmap );
+            //g.DrawImage( source, 0, 0, width, height );
+            //g.Dispose( );
 
             return bitmap;
         }
@@ -318,7 +323,7 @@ namespace AForge.Imaging
             {
                 if ( stream != null )
                 {
-                    stream.Close( );
+                    //stream.Close( );
                     stream.Dispose( );
                 }
             }
