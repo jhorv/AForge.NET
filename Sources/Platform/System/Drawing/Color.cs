@@ -97,6 +97,27 @@ namespace System.Drawing
         public static readonly Color Magenta = new Color(SKColors.Magenta);
         public static readonly Color Yellow = new Color(SKColors.Yellow);
         public static readonly Color White = new Color(SKColors.White);
+        public static readonly Color Salmon = new Color(SKColors.Salmon);
+        public static readonly Color SaddleBrown = new Color(SKColors.SaddleBrown);
+        public static readonly Color SteelBlue = new Color(SKColors.SteelBlue);
+        public static readonly Color SkyBlue = new Color(SKColors.SkyBlue);
+        public static readonly Color Silver = new Color(SKColors.Silver);
+        public static readonly Color Ivory = new Color(SKColors.Ivory);
+        public static readonly Color HotPink = new Color(SKColors.HotPink);
+        public static readonly Color DarkGray = new Color(SKColors.DarkGray);
+        public static readonly Color LimeGreen = new Color(SKColors.LimeGreen);
+        public static readonly Color Tomato = new Color(SKColors.Tomato);
+        public static readonly Color RosyBrown = new Color(SKColors.RosyBrown);
+        public static readonly Color PowderBlue = new Color(SKColors.PowderBlue);
+        public static readonly Color Plum = new Color(SKColors.Plum);
+        public static readonly Color PapayaWhip = new Color(SKColors.PapayaWhip);
+        public static readonly Color Orange = new Color(SKColors.Orange);
+        public static readonly Color Violet = new Color(SKColors.Violet);
+        public static readonly Color Brown = new Color(SKColors.Brown);
+        public static readonly Color Olive = new Color(SKColors.Olive);
+        public static readonly Color Gold = new Color(SKColors.Gold);
+        public static readonly Color Indigo = new Color(SKColors.Indigo);
+        public static readonly Color DarkSeaGreen = new Color(SKColors.DarkSeaGreen);
 
 
         //public static bool operator ==(Color left, Color right)
